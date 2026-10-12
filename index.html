@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ofertazo del Día</title>
+<meta name="description" content="Las mejores rebajas de Amazon, Mercado Libre, Walmart y más, para México y Estados Unidos. Revisadas a mano todos los días.">
+<meta property="og:title" content="Ofertazo del Día">
+<meta property="og:description" content="Ofertas reales de Amazon, Mercado Libre, Walmart y más. México y Estados Unidos.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 16 14 4h14v14L16 28z' fill='%23ffc629' stroke='%2317201f' stroke-width='2'/%3E%3Ccircle cx='22' cy='10' r='2.5' fill='%2317201f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;700&display=swap">
+<style>
+/* Layout: etiqueta de precio de tianguis — barra de filtros fija arriba, rejilla de tarjetas tipo etiqueta, panel de dueño desplegable */
+:root{
+  --bg:#f6f4ee; --surface:#ffffff; --fg:#17201f; --muted:#5d6966; --line:#dfe2dc;
+  --accent:#0f5c55; --accent-fg:#ffffff; --tag:#ffc629; --tag-fg:#17201f; --hot:#d6342b; --hot-fg:#ffffff;
+  --amz:#232f3e; --ml:#2d3277; --ml-bg:#fff159; --panel:#eef3ef;
+  --display:"Archivo Black","Arial Black",Impact,sans-serif;
+  --body:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101615; --surface:#18201f; --fg:#eef2ef; --muted:#9aa7a3; --line:#2a3432;
+  --accent:#3fb3a6; --accent-fg:#0b1312; --tag:#ffc629; --tag-fg:#17201f; --hot:#ff6a5e; --hot-fg:#1a0907;
+  --amz:#e9edf2; --ml:#ffe14d; --ml-bg:#2d3277; --panel:#152422; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101615; --surface:#18201f; --fg:#eef2ef; --muted:#9aa7a3; --line:#2a3432;
+  --accent:#3fb3a6; --accent-fg:#0b1312; --tag:#ffc629; --tag-fg:#17201f; --hot:#ff6a5e; --hot-fg:#1a0907;
+  --amz:#e9edf2; --ml:#ffe14d; --ml-bg:#2d3277; --panel:#152422; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:20px 48px}
+header.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px}
+.brand{font-family:var(--display);font-size:clamp(30px,7vw,48px);line-height:.95;letter-spacing:-.01em;margin:0}
+.brand span{background:var(--tag);color:var(--tag-fg);padding:0 .18em;display:inline-block;transform:rotate(-2deg)}
+.sub{color:var(--muted);margin:6px 0 0;max-width:46ch}
+.join{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;border:0;border-radius:999px;padding:9px 16px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--accent);color:var(--accent-fg)}
+.btn.ghost{background:transparent;color:var(--fg);border:1.5px solid var(--line)}
+.btn.owner{background:var(--tag);color:var(--tag-fg)}
+.btn.small{padding:6px 12px;font-size:13px}
+.btn:disabled{opacity:.55;cursor:default}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--tag);outline-offset:2px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:14px;margin-top:16px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select{font:inherit;background:var(--surface);color:var(--fg);border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;width:100%;min-width:0}
+#q{flex:1 1 220px;width:auto}
+#sort{width:auto}
+.chip{font:inherit;font-size:14px;font-weight:500;background:var(--surface);color:var(--fg);border:1.5px solid var(--line);border-radius:999px;padding:6px 13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.count{color:var(--muted);font-size:13px;margin:14px 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;position:relative;min-width:0}
+.card .head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.store{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid var(--line);color:var(--muted)}
+.store.amazon{color:var(--amz);border-color:currentColor}
+.store.ml{background:var(--ml-bg);color:var(--ml);border-color:transparent}
+.ex{font-size:11px;color:var(--muted);font-style:italic}
+.emoji{font-size:44px;line-height:1;height:72px;display:grid;place-items:center;background:var(--bg);border-radius:10px}
+.title{font-weight:700;margin:0;font-size:15px;line-height:1.35;text-wrap:balance;overflow-wrap:anywhere}
+.cat{font-size:12px;color:var(--muted)}
+.price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:auto}
+.tag{font-family:var(--display);font-size:24px;background:var(--tag);color:var(--tag-fg);padding:2px 12px 2px 18px;clip-path:polygon(10px 0,100% 0,100% 100%,10px 100%,0 50%);font-variant-numeric:tabular-nums}
+.old{color:var(--muted);text-decoration:line-through;font-variant-numeric:tabular-nums}
+.off{position:absolute;top:-10px;right:12px;background:var(--hot);color:var(--hot-fg);font-weight:700;font-size:13px;padding:3px 9px;border-radius:999px;font-variant-numeric:tabular-nums}
+.actions{display:flex;gap:8px}
+.actions .btn{flex:1;padding:9px 10px;font-size:14px}
+.aff{font-size:11px;color:var(--muted);text-align:center}
+.flag{font-size:11px;color:var(--muted)}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 16px;border:1.5px dashed var(--line);border-radius:14px}
+.empty strong{display:block;color:var(--fg);font-size:17px;margin-bottom:4px}
+/* panel */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:18px;display:flex;flex-direction:column;gap:14px}
+.panel h2{font-family:var(--display);font-size:20px;margin:0}
+.panel .hint{color:var(--muted);font-size:13px;margin:0}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.form .wide{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);min-width:0}
+.preview{font-size:14px;color:var(--fg);font-weight:700}
+.mine{display:flex;flex-direction:column;gap:6px}
+.mine-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.mine-row .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.mine-row .p{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px}
+.mine-row.off .t{text-decoration:line-through;color:var(--muted)}
+.msg{font-size:13px;margin:0}
+.msg.err{color:var(--hot)}
+footer{margin-top:40px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px;max-width:70ch}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:500;z-index:10}
+@media (prefers-reduced-motion:no-preference){.card{transition:transform .15s}.card:hover{transform:translateY(-2px)}}
+</style>
+<style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1 class="brand">Ofertazo <span>del Día</span></h1>
+      <p class="sub">Las mejores rebajas de Amazon, Mercado Libre, Walmart y más, revisadas a mano. Para México y Estados Unidos.</p>
+    </div>
+    <div class="join">
+      <a class="btn primary" id="tg" href="#" target="_blank" rel="noopener" hidden>Canal de Telegram</a>
+      <a class="btn ghost" id="wa" href="#" target="_blank" rel="noopener" hidden>WhatsApp</a>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="row">
+      <input id="q" type="search" placeholder="Buscar: audífonos, freidora, tenis…" aria-label="Buscar ofertas">
+      <select id="sort" aria-label="Ordenar">
+        <option value="new">Más recientes</option>
+        <option value="off">Mayor descuento</option>
+        <option value="low">Precio más bajo</option>
+      </select>
+    </div>
+    <div class="row" id="pais" role="group" aria-label="País">
+      <button class="chip" type="button" data-p="Todos" aria-pressed="true">Todos</button>
+      <button class="chip" type="button" data-p="MXN" aria-pressed="false">🇲🇽 México</button>
+      <button class="chip" type="button" data-p="USD" aria-pressed="false">🇺🇸 Estados Unidos</button>
+    </div>
+    <div class="row" id="stores" role="group" aria-label="Tienda"></div>
+  </div>
+
+  <p class="count" id="count"></p>
+  <div class="grid" id="grid"><p class="empty"><strong>Cargando ofertas…</strong></p></div>
+
+  <footer>
+    <p><strong>Aviso de afiliados:</strong> los enlaces de esta página son de afiliado. Si compras a través de ellos, recibimos una comisión sin costo extra para ti. Como Afiliado de Amazon, obtenemos ingresos por las compras que cumplen los requisitos aplicables.</p>
+    <p>Los precios y la disponibilidad pueden cambiar en cualquier momento. Revisa el precio final en la tienda antes de comprar.</p>
+  </footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ===== CONFIGURACIÓN: lo único que se edita ===== */
+const CONFIG = {
+  hoja: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqC8XuynHWQcCGyo73JvY_TIh8B2mUHZ4hmsn0bpEsSVQopLpqJt0oSWcAd024Q68io2GAlsvPhhs7/pub?output=csv",        // enlace CSV de la hoja de Google Sheets publicada
+  telegram: "",    // enlace de tu canal de Telegram
+  whatsapp: ""     // enlace de tu canal de WhatsApp
+};
+/* ================================================ */
+const $=s=>document.querySelector(s);
+const fmt=(n,m)=>(m==="USD"?"US$":"$")+Number(n).toLocaleString(m==="USD"?"en-US":"es-MX",{maximumFractionDigits:2});
+const pct=o=>o.antes>o.ahora?Math.round((1-o.ahora/o.antes)*100):0;
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cls=t=>/amazon/i.test(t)?"amazon":/mercado/i.test(t)?"ml":"";
+const num=v=>parseFloat(String(v||"").replace(/[^0-9.]/g,""))||0;
+function safeUrl(u){try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:"#"}catch(_){return "#"}}
+let OFERTAS=[],store="Todas",pais="Todos";
+try{pais=localStorage.getItem("pais")||"Todos"}catch(_){}
+
+if(CONFIG.telegram){$("#tg").href=CONFIG.telegram;$("#tg").hidden=false}
+if(CONFIG.whatsapp){$("#wa").href=CONFIG.whatsapp;$("#wa").hidden=false}
+
+function parseCSV(t){
+  const rows=[];let r=[],f="",q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c=='"')q=true;else if(c==","){r.push(f);f=""}
+    else if(c=="\n"||c=="\r"){if(c=="\r"&&t[i+1]=="\n")i++;r.push(f);rows.push(r);r=[];f=""}
+    else f+=c}
+  if(f||r.length){r.push(f);rows.push(r)}
+  return rows;
+}
+function norm(h){return h.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z]/g,"")}
+function load(rows){
+  const head=rows.shift().map(norm);
+  const k=(r,n)=>{const i=head.indexOf(n);return i<0?"":(r[i]||"").trim()};
+  return rows.map((r,i)=>{
+    const link=k(r,"link")||k(r,"enlace");
+    const m=(k(r,"moneda")||"MXN").toUpperCase().includes("USD")?"USD":"MXN";
+    const act=k(r,"activa").toLowerCase();
+    return {id:"o"+i,fecha:k(r,"fecha"),titulo:k(r,"producto")||k(r,"titulo"),tienda:k(r,"tienda")||"Tienda",link,
+      antes:num(k(r,"antes")||k(r,"precioantes")),ahora:num(k(r,"ahora")||k(r,"precioahora")),moneda:m,
+      cat:k(r,"categoria"),emoji:k(r,"icono")||k(r,"emoji")||"🔥",activa:!(act==="no"||act==="false"||act==="0"),orden:i}
+  }).filter(o=>o.titulo&&o.link&&o.ahora>0&&o.activa);
+}
+
+function renderChips(){
+  document.querySelectorAll("#pais .chip").forEach(c=>c.setAttribute("aria-pressed",c.dataset.p===pais));
+  const ts=["Todas",...new Set(OFERTAS.filter(o=>pais==="Todos"||o.moneda===pais).map(o=>o.tienda))];
+  if(!ts.includes(store))store="Todas";
+  $("#stores").innerHTML=ts.map(t=>`<button class="chip" type="button" aria-pressed="${t===store}" data-t="${esc(t)}">${esc(t)}</button>`).join("");
+}
+$("#pais").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;pais=b.dataset.p;try{localStorage.setItem("pais",pais)}catch(_){}renderChips();render()});
+$("#stores").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;store=b.dataset.t;renderChips();render()});
+$("#q").addEventListener("input",render);$("#sort").addEventListener("change",render);
+
+function render(){
+  const q=$("#q").value.trim().toLowerCase();
+  let list=OFERTAS.filter(o=>(pais==="Todos"||o.moneda===pais)&&(store==="Todas"||o.tienda===store)&&(!q||(o.titulo+" "+o.cat+" "+o.tienda).toLowerCase().includes(q)));
+  const s=$("#sort").value;
+  list.sort((a,b)=>s==="off"?pct(b)-pct(a):s==="low"?a.ahora-b.ahora:b.orden-a.orden);
+  $("#count").textContent=OFERTAS.length?`${list.length} oferta${list.length===1?"":"s"}`:"";
+  if(!OFERTAS.length){$("#grid").innerHTML=`<p class="empty"><strong>Todavía no hay ofertas</strong>Vuelve pronto, publicamos ofertas nuevas cada día.</p>`;return}
+  $("#grid").innerHTML=list.length?list.map(o=>`
+    <article class="card">
+      ${pct(o)>0?`<span class="off">-${pct(o)}%</span>`:""}
+      <div class="head"><span class="store ${cls(o.tienda)}">${esc(o.tienda)}</span><span class="flag">${o.moneda==="USD"?"🇺🇸 EE. UU.":"🇲🇽 México"}</span></div>
+      <div class="emoji" aria-hidden="true">${esc(o.emoji)}</div>
+      <div><p class="title">${esc(o.titulo)}</p><span class="cat">${esc(o.cat)}</span></div>
+      <div class="price"><span class="tag">${fmt(o.ahora,o.moneda)}</span>${o.antes>o.ahora?`<span class="old">${fmt(o.antes,o.moneda)}</span>`:""}</div>
+      <div class="actions">
+        <a class="btn primary" href="${esc(safeUrl(o.link))}" target="_blank" rel="sponsored nofollow noopener">Ver oferta</a>
+        <button class="btn ghost" type="button" data-share="${o.id}">Compartir</button>
+      </div>
+      <span class="aff">Enlace de afiliado: gano comisión si compras</span>
+    </article>`).join(""):`<p class="empty"><strong>Sin resultados</strong>Prueba otra búsqueda, tienda o país.</p>`;
+}
+$("#grid").addEventListener("click",async e=>{
+  const b=e.target.closest("[data-share]");if(!b)return;
+  const o=OFERTAS.find(x=>x.id===b.dataset.share);if(!o)return;
+  const txt=`🔥 ${o.titulo} a ${fmt(o.ahora,o.moneda)}${o.antes>o.ahora?` (antes ${fmt(o.antes,o.moneda)}, -${pct(o)}%)`:""} en ${o.tienda}\n${o.link}\n(Enlace de afiliado: gano comisión si compras)`;
+  if(navigator.share){try{await navigator.share({text:txt});return}catch(_){}}
+  try{await navigator.clipboard.writeText(txt);toast("Oferta copiada")}catch(_){toast("No se pudo copiar")}
+});
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,2200)}
+
+(async()=>{
+  renderChips();
+  if(!CONFIG.hoja){OFERTAS=[];render();return}
+  try{
+    const r=await fetch(CONFIG.hoja+(CONFIG.hoja.includes("?")?"&":"?")+"t="+Date.now());
+    if(!r.ok)throw 0;
+    OFERTAS=load(parseCSV(await r.text()));
+  }catch(_){$("#grid").innerHTML=`<p class="empty"><strong>No se pudieron cargar las ofertas</strong>Revisa tu conexión y recarga la página.</p>`;return}
+  renderChips();render();
+})();
+</script>
+</body>
+</html>
